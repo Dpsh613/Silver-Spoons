@@ -47,3 +47,54 @@ export const sendReservationEmails = async (reservationDetails) => {
         console.error('Error sending emails:', error);
     }
 };
+
+// phase 2
+export const sendVerificationEmail = async (email, name, verificationToken) => {
+    // In production, this URL points to your Next.js Admin Dashboard route, 
+    // which will then grab the token from the URL and send it to your Backend API.
+    const verifyUrl = `${process.env.ADMIN_URL}/verify-email?token=${verificationToken}`;
+
+    try {
+        await resend.emails.send({
+            from: 'Security <onboarding@resend.dev>', // Update when domain is verified
+            to: email,
+            subject: 'Verify your Admin Account',
+            html: `
+                <h2>Hello ${name},</h2>
+                <p>You have been invited to join the Admin Portal.</p>
+                <p>Please click the button below to verify your email address. Once verified, an Owner will review and approve your access.</p>
+                <a href="${verifyUrl}" style="background-color: #d97706; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">
+                    Verify Email
+                </a>
+                <p>If the button doesn't work, copy and paste this link: <br> ${verifyUrl}</p>
+                <p>This link is valid for 24 hours.</p>
+            `,
+        });
+        console.log(`Verification email sent to ${email}`);
+    } catch (error) {
+        console.error('Error sending verification email:', error);
+    }
+};
+
+export const sendApprovalEmail = async (email, name) => {
+    const loginUrl = `${process.env.ADMIN_URL}/login`;
+
+    try {
+        await resend.emails.send({
+            from: 'Security <onboarding@resend.dev>',
+            to: email,
+            subject: 'Your Admin Account is Approved!',
+            html: `
+                <h2>Hello ${name},</h2>
+                <p>Great news! An Owner has approved your access to the Admin Portal.</p>
+                <p>You can now log in and access your dashboard.</p>
+                <a href="${loginUrl}" style="background-color: #d97706; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">
+                    Log In Now
+                </a>
+            `,
+        });
+        console.log(`Approval email sent to ${email}`);
+    } catch (error) {
+        console.error('Error sending approval email:', error);
+    }
+};

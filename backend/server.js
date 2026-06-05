@@ -3,12 +3,14 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+// files 
 import { connectDB } from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import menuRoutes from './routes/menuRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import reservationRoutes from './routes/reservationRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
+import adminManagementRoutes from './routes/adminManagementRoutes.js';
 
 // Load env vars
 dotenv.config();
@@ -41,7 +43,7 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/analytics', analyticsRoutes);
-
+app.use('/api/admin-management', adminManagementRoutes);
 
 // Basic health check route
 app.get('/', (req, res) => {

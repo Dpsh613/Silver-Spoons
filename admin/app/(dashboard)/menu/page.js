@@ -32,7 +32,7 @@ export default function MenuManager() {
             if (data.image && data.image[0]) {
                 formData.append('image', data.image[0]);
             }
-
+ 
             await api.post('/menu/items', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
