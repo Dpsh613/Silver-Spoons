@@ -70,6 +70,8 @@ const adminSchema = new mongoose.Schema(
         passwordChangedAt: {
             type: Date
         },
+        resetPasswordToken: String, //phase4 
+        resetPasswordExpire: Date, //phase4 
     },
     { timestamps: true }
 );
@@ -110,6 +112,21 @@ adminSchema.methods.generateEmailVerificationToken = function () {
 
     // 4. Return the UNHASHED token to send via email
     return verificationToken;
+};
+// phase-4
+// Generate and hash password reset token
+adminSchema.methods.generatePasswordResetToken = function () {
+    const resetToken = crypto.randomBytes(20).toString('hex');
+
+    this.resetPasswordToken = crypto
+        .createHash('sha256')
+        .update(resetToken)
+        .digest('hex');
+
+    // Password reset tokens should be short-lived (15 minutes)
+    this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+
+    return resetToken;
 };
 
 export default mongoose.model('Admin', adminSchema);

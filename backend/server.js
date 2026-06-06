@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 // files 
 import { connectDB } from './config/db.js';
+import { apiLimiter } from './middlewares/rateLimiter.js';
 import authRoutes from './routes/authRoutes.js';
 import menuRoutes from './routes/menuRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
@@ -22,6 +23,8 @@ const app = express();
 
 // Security HTTP headers
 app.use(helmet());
+app.use('/api/', apiLimiter); // Apply general rate limiting to ALL requests
+
 
 // CORS configuration (Crucial for HttpOnly cookies)
 app.use(

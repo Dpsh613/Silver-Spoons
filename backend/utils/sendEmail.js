@@ -98,3 +98,36 @@ export const sendApprovalEmail = async (email, name) => {
         console.error('Error sending approval email:', error);
     }
 };
+
+// phase-4
+export const sendPasswordResetEmail = async (email, name, resetToken) => {
+    const resetUrl = `${process.env.ADMIN_URL}/reset-password?token=${resetToken}`;
+
+    try {
+        await resend.emails.send({
+            from: 'Security <onboarding@resend.dev>',
+            to: email,
+            subject: 'Password Reset Request',
+            html: `
+                <h2>Hello ${name},</h2>
+                <p>You are receiving this email because you (or someone else) requested a password reset for your Admin portal account.</p>
+                <p>Click the button below to reset your password. This link is valid for 15 minutes.</p>
+                <a href="${resetUrl}" style="background-color: #dc2626; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">
+                    Reset Password
+                </a>
+                <br/><br/>
+                <p>If the button doesn't work, copy and paste this link: <br> <strong>${resetUrl}</strong></p>
+                <p>This link is valid for 15 minutes.</p>
+                <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+            `,
+        });
+
+        // 🛠️ DEVELOPER COMFORT: Log the link directly to your terminal console!
+        // This means you don't even have to open your email inbox to grab the token while testing.
+        console.log(`Password reset email sent to ${email}`);
+        console.log(`🔗 DEV TEST RESET LINK: ${resetUrl}`);
+
+    } catch (error) {
+        console.error('Error sending password reset email:', error);
+    }
+};
